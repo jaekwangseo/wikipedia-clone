@@ -32,9 +32,9 @@ app.use('/wiki', wikiRouter);
 app.use(express.static(path.join(__dirname, '/public')));
 
 //database sync
-models.User.sync({})
+models.User.sync({  })
 .then( function() {
-  return models.Page.sync({});
+  return models.Page.sync({ });
 })
 .then( function() {
   if (!module.parent) {
