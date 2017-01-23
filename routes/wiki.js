@@ -7,9 +7,19 @@ var Page = models.Page;
 var User = models.User;
 
 
-router.get('/', function ( req, res ) {
+router.get('/', function ( req, res, next ) {
   // console.log('went to get');
-  res.render('index'); // should be redirect('/'); but we aren't handling yet
+  Page.findAll({
+    limit: 100,
+    order: 'date DESC'
+  })
+  .then( function (pages) {
+    // console.log(pages);
+    let newPagesList = { pages: pages };
+    console.log(newPagesList);
+    res.render('index.html',  newPagesList); // should be redirect('/'); but we aren't handling yet
+  })
+  .catch(next);
 });
 
 router.post('/', function(req, res, next) {
@@ -26,7 +36,7 @@ router.post('/', function(req, res, next) {
     status = 'closed'
   }
 
-  let urlTitle = title.replace(' ', '_')
+  // let urlTitle = title.replace(' ', '_')
 
   var page = Page.build({
     title: title,
@@ -35,9 +45,8 @@ router.post('/', function(req, res, next) {
     status: status
   })
   .save()
-  .then(function(page) {
-
-    res.json(page)
+  .then(function(savedPage) {
+    res.redirect(savedPage.route);
   })
   .catch(function(err) {
     res.render('error', err);
@@ -47,6 +56,20 @@ router.post('/', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   res.render('addpage', {});
+});
+
+router.get('/:title', function (req, res, next) {
+  let title = req.params.title;
+  Page.findOne({
+    where: { urlTitle: title }
+  })
+  .then( function (page) {
+    // console.log(page);
+
+    res.render('wikipage', { page: page });
+  })
+  .catch(next);
+
 });
 
 module.exports = router;
