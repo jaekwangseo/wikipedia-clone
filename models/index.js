@@ -1,5 +1,7 @@
 var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack');
+// var db = new Sequelize('postgres://192.168.4.141:5432/wikistack');
+
 
 let Page = db.define('page', {
   title: { type: Sequelize.STRING, allowNull: false, defaultValue: 'Page Title'},

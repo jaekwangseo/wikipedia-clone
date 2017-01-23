@@ -4,12 +4,11 @@ var express = require('express');
 var bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const volleyball = require('volleyball');
-const router = require('./routes');
+const wikiRouter = require('./routes/wiki.js');
 const path = require('path');
 const models = require('./models')
 
 var app = express();
-
 
 
 app.set('view engine', 'html');
@@ -26,7 +25,9 @@ app.use(bodyParser.urlencoded({ //parses http body
   extended: true
 }));
 app.use(bodyParser.json());
-app.use(router);
+// app.use(router);
+app.use('/wiki', wikiRouter);
+
 
 app.use(express.static(path.join(__dirname, '/public')));
 
@@ -38,7 +39,7 @@ models.User.sync({})
 .then( function() {
   if (!module.parent) {
     app.listen(3000, function () {
-        console.log('Server is listening on port 3001!');
+        console.log('Server is listening on port 3000!');
     });
   }
 })
